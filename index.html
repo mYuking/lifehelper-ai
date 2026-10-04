@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeHelper AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f8fc;color:#1f2937}
+header{height:70px;background:#fff;border-bottom:1px solid #e8ebf0;display:flex;align-items:center;justify-content:space-between;padding:0 7%;position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:800}.logo span{color:#6c63ff}
+nav a{text-decoration:none;color:#667085;margin-left:24px;font-size:14px}
+.hero{padding:75px 7% 95px;text-align:center;background:linear-gradient(135deg,#6c63ff,#8e85ff);color:white}
+.badge{display:inline-block;background:#ffffff22;border:1px solid #ffffff40;padding:7px 13px;border-radius:20px;font-size:13px;margin-bottom:18px}
+.hero h1{font-size:48px;max-width:750px;margin:auto;line-height:1.1}
+.hero h1 span{color:#ffe48a}
+.hero p{max-width:620px;margin:18px auto 0;line-height:1.6;color:#eee}
+.container{width:86%;max-width:1050px;margin:auto}
+.ask{background:#fff;margin-top:-40px;padding:22px;border-radius:17px;box-shadow:0 12px 35px #00000012}
+.input-row{display:flex;gap:10px}
+textarea{flex:1;resize:none;border:1px solid #dfe3ea;border-radius:11px;padding:15px;min-height:70px;outline:none;font-size:15px}
+.send{background:#6c63ff;color:white;border:0;border-radius:10px;padding:0 22px;font-weight:bold}
+.categories{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.cat{background:#f0f1ff;color:#5148c9;border:0;padding:8px 12px;border-radius:20px;font-size:12px}
+section{padding:55px 0}.title{text-align:center;margin-bottom:25px}.title h2{font-size:27px}.title p{color:#7b8494;margin-top:7px}
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.category{background:white;border:0;border-radius:14px;padding:22px;text-align:left;box-shadow:0 5px 20px #00000008;cursor:pointer;transition:.2s}
+.category:hover{transform:translateY(-3px)}.category .icon{font-size:28px;margin-bottom:12px}.category b{display:block;margin-bottom:6px}.category small{color:#7b8494;line-height:1.4}
+.chat-section{padding-top:0}.chat{background:#fff;border-radius:17px;padding:20px;box-shadow:0 5px 20px #00000008;min-height:180px}
+.message{display:flex;margin-bottom:15px}.bubble{max-width:82%;padding:12px 15px;border-radius:12px;line-height:1.55;font-size:14px;white-space:pre-wrap}.ai{background:#f1f2ff;color:#30345c}.user{margin-left:auto;background:#6c63ff;color:#fff}
+.empty{text-align:center;color:#9aa2b1;padding:40px 10px}
+.loading{display:flex;align-items:center;gap:9px}.dot{width:7px;height:7px;background:#6c63ff;border-radius:50%;animation:b 1s infinite alternate}.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}@keyframes b{to{opacity:.2;transform:translateY(-4px)}}
+.about{background:#202638;color:white;border-radius:17px;padding:28px;line-height:1.6}.about h2{margin-bottom:10px}.about p{color:#c6ccda;font-size:14px}
+footer{text-align:center;padding:30px;color:#8b93a2;font-size:13px}
+@media(max-width:700px){nav{display:none}.hero h1{font-size:36px}.input-row{flex-direction:column}.send{height:48px}.category-grid{grid-template-columns:1fr 1fr}.hero{padding-top:55px}}
+@media(max-width:430px){.category-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✨ LifeHelper <span>AI</span></div>
+  <nav>
+    <a href="#ask">Tanya AI</a>
+    <a href="#categories">Kategori</a>
+    <a href="#about">Tentang</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="badge">🤖 AI Assistant untuk kebutuhan sehari-hari</div>
+  <h1>Tanyakan apa saja kepada <span>LifeHelper AI</span></h1>
+  <p>
+    Butuh ide, penjelasan, saran, atau bantuan menulis?
+    Ketik pertanyaanmu dan AI akan membantu.
+  </p>
+</div>
+
+<main class="container">
+
+<section id="ask" class="ask">
+  <div class="input-row">
+    <textarea id="question" placeholder="Contoh: Saya punya waktu luang 3 jam. Berikan kegiatan yang bermanfaat."></textarea>
+    <button class="send" onclick="sendQuestion()">Kirim ✨</button>
+  </div>
+  <div class="categories">
+    <button class="cat" onclick="setPrompt('Beri saya ide kegiatan yang bisa dilakukan saat waktu luang.')">💡 Ide kegiatan</button>
+    <button class="cat" onclick="setPrompt('Berikan tips belajar yang efektif untuk mahasiswa.')">📚 Belajar</button>
+    <button class="cat" onclick="setPrompt('Berikan ide makanan sederhana yang mudah dibuat.')">🍳 Makanan</button>
+    <button class="cat" onclick="setPrompt('Berikan tips membuat CV yang menarik untuk pemula.')">💼 Karier</button>
+    <button class="cat" onclick="setPrompt('Buatkan caption Instagram yang santai tentang liburan.')">✍️ Menulis</button>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="title">
+    <h2>Jelajahi Bantuan AI</h2>
+    <p>Pilih kategori atau langsung tulis pertanyaanmu sendiri.</p>
+  </div>
+
+  <div class="category-grid">
+    <button class="category" onclick="setPrompt('Saya ingin belajar skill baru. Berikan beberapa rekomendasi dan alasannya.')">
+      <div class="icon">📚</div><b>Belajar</b><small>Materi, tips belajar, dan penjelasan konsep.</small>
+    </button>
+    <button class="category" onclick="setPrompt('Berikan beberapa ide kegiatan produktif yang bisa saya lakukan hari ini.')">
+      <div class="icon">💡</div><b>Ide & Produktivitas</b><small>Cari ide dan cara menggunakan waktu.</small>
+    </button>
+    <button class="category" onclick="setPrompt('Berikan tips sederhana untuk mempersiapkan karier setelah lulus kuliah.')">
+      <div class="icon">💼</div><b>Karier</b><small>CV, interview, skill, dan karier.</small>
+    </button>
+    <button class="category" onclick="setPrompt('Buatkan ide caption media sosial yang menarik dan tidak terlalu formal.')">
+      <div class="icon">✍️</div><b>Menulis</b><small>Caption, teks, ide, dan perbaikan tulisan.</small>
+    </button>
+  </div>
+</section>
+
+<section class="chat-section">
+  <div class="title">
+    <h2>💬 Percakapan</h2>
+    <p>Riwayat percakapan hanya ada selama halaman ini terbuka.</p>
+  </div>
+  <div class="chat" id="chat">
+    <div class="empty">Belum ada pertanyaan.<br>Silakan tanyakan sesuatu kepada LifeHelper AI.</div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about">
+    <h2>Tentang LifeHelper AI</h2>
+    <p>
+      LifeHelper AI adalah konsep web assistant sederhana.
+      Website ini tidak menggunakan database dan tidak memerlukan akun.
+      Pertanyaan dikirim ke AI melalui n8n dan jawaban langsung ditampilkan di halaman.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  LifeHelper AI © 2026 · Simple AI Assistant
+</footer>
+
+<script>
+// ==========================================================
+// HUBUNGKAN KE N8N DI SINI
+// ==========================================================
+const N8N_WEBHOOK = "https://n8n-lxu28d6mg3jr.jkt6.sumopod.my.id/webhook/lifehelper-ai";
+// Contoh:
+// const N8N_WEBHOOK = "https://domain-n8n-kamu/webhook/lifehelper-ai";
+
+let messages = [];
+
+function setPrompt(text){
+  document.getElementById("question").value = text;
+  document.getElementById("question").focus();
+}
+
+function addMessage(text,type){
+  messages.push({text,type});
+  renderChat();
+}
+
+function renderChat(){
+  const chat=document.getElementById("chat");
+
+  if(messages.length===0){
+    chat.innerHTML='<div class="empty">Belum ada pertanyaan.<br>Silakan tanyakan sesuatu kepada LifeHelper AI.</div>';
+    return;
+  }
+
+  chat.innerHTML=messages.map(m=>`
+    <div class="message">
+      <div class="bubble ${m.type}">${escapeHTML(m.text)}</div>
+    </div>
+  `).join("");
+
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function showLoading(){
+  const chat=document.getElementById("chat");
+  chat.innerHTML+=`
+    <div class="message" id="loading">
+      <div class="bubble ai loading">
+        AI sedang berpikir
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>`;
+  chat.scrollTop=chat.scrollHeight;
+}
+
+async function sendQuestion(){
+  const input=document.getElementById("question");
+  const prompt=input.value.trim();
+
+  if(!prompt){
+    alert("Silakan tulis pertanyaan terlebih dahulu.");
+    return;
+  }
+
+  addMessage(prompt,"user");
+  input.value="";
+  showLoading();
+
+  // Jika n8n sudah terhubung
+  if(N8N_WEBHOOK){
+    try{
+      const response=await fetch(N8N_WEBHOOK,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({prompt:prompt})
+      });
+
+      const data=await response.json();
+      document.getElementById("loading")?.remove();
+
+      const answer=data.answer || data.output || data.text || data.aiRecommendation ||
+                    "AI tidak mengirimkan jawaban.";
+
+      addMessage(answer,"ai");
+      return;
+
+    }catch(error){
+      document.getElementById("loading")?.remove();
+      addMessage("Maaf, website gagal terhubung ke n8n. Periksa URL Webhook dan pengaturan CORS.","ai");
+      return;
+    }
+  }
+
+  // Demo tanpa n8n supaya website langsung bisa dicoba
+  setTimeout(()=>{
+    document.getElementById("loading")?.remove();
+    addMessage(demoAI(prompt),"ai");
+  },700);
+}
+
+function demoAI(q){
+  const x=q.toLowerCase();
+
+  if(x.includes("cv") || x.includes("karier"))
+    return "Untuk memulai karier, fokuskan CV pada pendidikan, project, skill, dan pengalaman yang relevan. Untuk pemula, project kuliah juga bisa dimasukkan sebagai pengalaman.";
+
+  if(x.includes("belajar") || x.includes("skill"))
+    return "Coba gunakan pola sederhana: tentukan tujuan → pelajari dasar → praktik dengan project kecil → evaluasi hasil → ulangi. Konsistensi lebih penting daripada belajar terlalu banyak sekaligus.";
+
+  if(x.includes("makanan") || x.includes("masak"))
+    return "Kalau ingin sederhana, kamu bisa mencoba nasi goreng, telur kecap, mie goreng, ayam teriyaki sederhana, atau tumis sayur. Pilih berdasarkan bahan yang sudah tersedia di rumah.";
+
+  if(x.includes("caption") || x.includes("instagram"))
+    return "Contoh caption santai: \"Sedikit jalan-jalan, banyak cerita. 🌤️✨\" Kalau kamu beri tema dan suasananya, AI bisa membuat versi yang lebih sesuai.";
+
+  if(x.includes("waktu luang") || x.includes("kegiatan"))
+    return "Kalau punya waktu luang, kamu bisa membaginya menjadi: 1 jam belajar skill, 1 jam olahraga atau jalan santai, dan 1 jam melakukan kegiatan yang kamu sukai.";
+
+  return "Pertanyaan yang menarik. Dalam versi demo ini jawaban masih sederhana. Setelah Webhook n8n dan Gemini dihubungkan, LifeHelper AI akan memberikan jawaban AI yang lebih lengkap dan sesuai konteks pertanyaanmu.";
+}
+
+function escapeHTML(text){
+  return text.replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
+document.getElementById("question").addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendQuestion();
+  }
+});
+</script>
+
+</body>
+</html>
